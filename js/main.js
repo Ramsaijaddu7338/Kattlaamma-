@@ -1,6 +1,6 @@
 // ===== CONFIGURATION =====
 const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbyZBDuX5G50in9bB1oXcS6jedxpkTejz_yn6YDj63LNE-x34RMSiXHW4kUaDpU5gaaE/exec', // ← REPLACE WITH YOUR DEPLOYMENT URL
+    API_URL: 'https://script.google.com/macros/s/AKfycbzt-icrOHSgrQeL-4pWn3h_BaMDGemetQg2ZlKtaN93f_sL3hXva9NeH_MGpvN34amKCw/exec', // ← REPLACE WITH YOUR DEPLOYMENT URL
     GOOGLE_DRIVE_FOLDER: '1WUeWMSHjLL5hadKdplou3OfyH95UB9aj',
     SPREADSHEET_ID: '1pawm12qQ6KA43CUnrgMbHtJlRgcEHOQ8_-kzk_iLiwM',
     TEMPLE_NAME: 'శ్రీ శ్రీ కట్లమ్మ అమ్మవారి ఆలయం',
