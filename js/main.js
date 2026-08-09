@@ -1,6 +1,6 @@
 // ===== CONFIGURATION =====
 const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbwBw1zaTJrgChIqCx1l1ECdeVp7x0bjS7zqXZCdCtTa7DwnqiPa1B2sjS3jls5g3mYQ/exec', // ← REPLACE WITH YOUR DEPLOYMENT URL
+    API_URL: 'https://script.google.com/macros/s/AKfycbxPROLdNZwuQDDW7zVw6-_eWGG5vZB-BRgtUQh0e0ULHIFRZlnpJt_Rr4lpgHqB1e4/exec', // ← REPLACE WITH YOUR DEPLOYMENT URL
     GOOGLE_DRIVE_FOLDER: '1WUeWMSHjLL5hadKdplou3OfyH95UB9aj',
     SPREADSHEET_ID: '1pawm12qQ6KA43CUnrgMbHtJlRgcEHOQ8_-kzk_iLiwM',
     TEMPLE_NAME: 'శ్రీ శ్రీ కట్లమ్మ అమ్మవారి ఆలయం',
@@ -22,13 +22,15 @@ function getThumbnailUrl(fileId) {
 
 // ===== AOS INIT =====
 document.addEventListener('DOMContentLoaded', function() {
-    AOS.init({
-        duration: 800,
-        easing: 'ease-out-cubic',
-        once: true,
-        offset: 100,
-        disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    });
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-cubic',
+            once: true,
+            offset: 100,
+            disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        });
+    }
 });
 
 // ===== NAVBAR SCROLL EFFECT =====
@@ -171,7 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
     createPetals();
     createParticles();
     
-    // Close mobile menu on link click
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     const navCollapse = document.getElementById('navMenu');
     if (navCollapse) {
