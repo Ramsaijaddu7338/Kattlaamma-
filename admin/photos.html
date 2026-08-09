@@ -10,7 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
     
     <style>
-        /* Same sidebar styles from dashboard.html */
         :root {
             --primary-maroon: #7a1a2e;
             --primary-dark: #4a0e1a;
@@ -45,7 +44,7 @@
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 999; }
         .sidebar-overlay.show { display: block; }
         
-        /* Upload area */
+        /* Upload Area */
         .upload-area {
             border: 2px dashed rgba(201, 160, 78, 0.3);
             border-radius: 16px;
@@ -55,32 +54,26 @@
             transition: all 0.3s ease;
             background: #fff;
         }
-        .upload-area:hover {
-            border-color: var(--gold);
-            background: rgba(201, 160, 78, 0.03);
-        }
-        .upload-area.dragover {
-            border-color: var(--gold);
-            background: rgba(201, 160, 78, 0.08);
-        }
-        .upload-area .upload-icon {
-            font-size: 3rem;
-            color: var(--gold);
-            display: block;
-            margin-bottom: 1rem;
-        }
+        .upload-area:hover { border-color: var(--gold); background: rgba(201, 160, 78, 0.03); }
+        .upload-area.dragover { border-color: var(--gold); background: rgba(201, 160, 78, 0.08); }
+        .upload-area .upload-icon { font-size: 3rem; color: var(--gold); display: block; margin-bottom: 1rem; }
         
-        /* Photo grid */
-        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        /* Photo Grid */
+        .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
         .photo-item { position: relative; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
-        .photo-item img { width: 100%; height: 150px; object-fit: cover; }
+        .photo-item img { width: 100%; height: 200px; object-fit: cover; }
         .photo-item .photo-actions { position: absolute; top: 8px; right: 8px; opacity: 0; transition: opacity 0.3s ease; }
         .photo-item:hover .photo-actions { opacity: 1; }
         .photo-item .photo-actions .btn { border-radius: 50%; width: 32px; height: 32px; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
-        .photo-item .photo-info { padding: 0.5rem; font-size: 0.8rem; color: #6c757d; }
+        .photo-item .photo-info { padding: 0.75rem; font-size: 0.85rem; color: #6c757d; }
         .photo-item .photo-info .photo-title { font-weight: 600; color: var(--primary-dark); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .table-container { background: #fff; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.04); margin-top: 2rem; }
+        
+        .btn-gold { background: var(--gold); color: #fff; border: none; padding: 0.5rem 2rem; border-radius: 8px; transition: all 0.3s ease; }
+        .btn-gold:hover { background: #a8853a; color: #fff; transform: translateY(-2px); }
+        
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; }
         
         @media (max-width: 992px) {
             .admin-sidebar { transform: translateX(-100%); }
@@ -90,16 +83,15 @@
         }
         @media (max-width: 576px) {
             .admin-main { padding: 1rem; }
-            .photo-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .photo-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .upload-area { padding: 2rem 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
     <aside class="admin-sidebar" id="adminSidebar">
         <div class="admin-sidebar-brand">
             <span class="brand-icon"><i class="bi bi-building"></i></span>
@@ -134,7 +126,6 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="admin-main">
         <header class="admin-header">
             <div>
@@ -143,12 +134,12 @@
                 </button>
                 <h4>Manage Photos</h4>
             </div>
-            <div class="admin-user">
+            <div class="admin-user d-flex align-items-center gap-2">
                 <div class="user-info d-none d-sm-block">
                     <strong id="adminUserName">Admin</strong>
                     <small>Administrator</small>
                 </div>
-                <div class="avatar" style="width:40px;height:40px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;" id="adminAvatar">A</div>
+                <div class="avatar" id="adminAvatar">A</div>
             </div>
         </header>
 
@@ -156,9 +147,31 @@
         <div class="upload-area" id="uploadArea">
             <span class="upload-icon"><i class="bi bi-cloud-upload"></i></span>
             <h5>Upload Photos</h5>
-            <p class="text-muted">Drag & drop photos here or click to browse</p>
+            <p class="text-muted">Click to browse or drag & drop photos here</p>
             <small class="text-muted">Supported: JPG, PNG, WebP (Max 10MB each)</small>
             <input type="file" id="fileInput" accept="image/*" multiple style="display:none;" />
+        </div>
+
+        <!-- Upload Options -->
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Select Event</label>
+                <select class="form-select" id="uploadEventSelect">
+                    <option value="">General Gallery</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold">Photo Title (optional)</label>
+                <input type="text" class="form-control" id="uploadPhotoTitle" placeholder="e.g., Kavadi Festival 2026" />
+            </div>
+        </div>
+
+        <!-- Upload Progress -->
+        <div id="uploadProgress" class="mt-3" style="display:none;">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-gold" role="progressbar" style="width: 0%;"></div>
+            </div>
+            <p class="text-muted small mt-1" id="uploadStatus">Uploading...</p>
         </div>
 
         <!-- Photos Grid -->
@@ -168,7 +181,7 @@
                 <span class="badge bg-gold" id="photoCount">0 photos</span>
             </div>
             <div class="photo-grid" id="photoGrid">
-                <div class="col-12 text-center py-4">
+                <div class="col-12 text-center py-5">
                     <div class="spinner-border text-gold" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -202,6 +215,11 @@
     </div>
 
     <script>
+        // ===== CONFIG =====
+        const CONFIG = {
+            API_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec' // ← REPLACE WITH YOUR DEPLOYMENT URL
+        };
+
         // ===== SIDEBAR LOGIC =====
         const sidebar = document.getElementById('adminSidebar');
         const overlay = document.getElementById('sidebarOverlay');
@@ -226,7 +244,6 @@
             return true;
         }
 
-        // ===== LOGOUT =====
         function handleLogout() {
             if (confirm('Are you sure you want to logout?')) {
                 sessionStorage.removeItem('adminLoggedIn');
@@ -235,112 +252,190 @@
             }
         }
 
+        // ===== LOAD EVENTS FOR DROPDOWN =====
+        async function loadEventsForUpload() {
+            try {
+                const response = await fetch(`${CONFIG.API_URL}?action=getEvents`);
+                const data = await response.json();
+                
+                const select = document.getElementById('uploadEventSelect');
+                if (select && data.events) {
+                    data.events.forEach(event => {
+                        const option = document.createElement('option');
+                        option.value = event.id;
+                        option.textContent = `${event.event_name} (${event.year})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+            }
+        }
+
         // ===== LOAD PHOTOS =====
         let photosData = [];
 
-        function loadPhotos() {
+        async function loadPhotos() {
             const grid = document.getElementById('photoGrid');
             
-            // Mock data
-            photosData = [
-                { id: 'PH_001', title: 'Kavadi Festival 2026', url: 'https://picsum.photos/seed/1/300/200', event: 'Ashada Kavadi' },
-                { id: 'PH_002', title: 'Temple Decorations', url: 'https://picsum.photos/seed/2/300/200', event: 'Jathara 2025' },
-                { id: 'PH_003', title: 'Devotees Gathering', url: 'https://picsum.photos/seed/3/300/200', event: 'Annual Festival' },
-                { id: 'PH_004', title: 'Special Pooja', url: 'https://picsum.photos/seed/4/300/200', event: 'Ashada Kavadi' },
-                { id: 'PH_005', title: 'Evening Aarti', url: 'https://picsum.photos/seed/5/300/200', event: 'Daily' },
-                { id: 'PH_006', title: 'Procession', url: 'https://picsum.photos/seed/6/300/200', event: 'Jathara 2025' }
-            ];
-            
-            document.getElementById('photoCount').textContent = photosData.length + ' photos';
-            document.getElementById('photoBadge').textContent = photosData.length;
-            
-            if (photosData.length === 0) {
+            try {
+                const response = await fetch(`${CONFIG.API_URL}?action=getPhotos`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('Error:', data.error);
+                    grid.innerHTML = `
+                        <div class="col-12 text-center py-4 text-danger">
+                            <i class="bi bi-exclamation-triangle display-4 d-block mb-2"></i>
+                            ${data.error}
+                        </div>
+                    `;
+                    return;
+                }
+                
+                photosData = data.photos || [];
+                document.getElementById('photoCount').textContent = photosData.length + ' photos';
+                document.getElementById('photoBadge').textContent = photosData.length;
+                
+                if (photosData.length === 0) {
+                    grid.innerHTML = `
+                        <div class="col-12 text-center py-4 text-muted">
+                            <i class="bi bi-images display-4 d-block mb-2"></i>
+                            No photos uploaded yet. Upload some above!
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = photosData.map(photo => {
+                    let imgUrl = photo.url || photo.direct_url || '';
+                    if (photo.drive_file_id) {
+                        imgUrl = `https://drive.google.com/uc?export=view&id=${photo.drive_file_id}`;
+                    }
+                    if (!imgUrl) imgUrl = 'assets/images/placeholder.jpg';
+                    
+                    return `
+                        <div class="photo-item">
+                            <img src="${imgUrl}" alt="${photo.title || 'Photo'}" loading="lazy" onerror="this.src='assets/images/placeholder.jpg'" />
+                            <div class="photo-actions">
+                                <button class="btn btn-danger btn-sm" onclick="confirmDelete('${photo.id}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="photo-info">
+                                <span class="photo-title">${photo.title || 'Untitled'}</span>
+                                <small>${photo.event || 'No event'}</small>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Error loading photos:', error);
                 grid.innerHTML = `
-                    <div class="col-12 text-center py-4 text-muted">
-                        <i class="bi bi-images display-4 d-block mb-2"></i>
-                        No photos uploaded yet.
+                    <div class="col-12 text-center py-4 text-danger">
+                        <i class="bi bi-exclamation-triangle display-4 d-block mb-2"></i>
+                        Failed to load photos. Please refresh.
                     </div>
                 `;
-                return;
             }
-            
-            grid.innerHTML = photosData.map(photo => `
-                <div class="photo-item">
-                    <img src="${photo.url}" alt="${photo.title}" loading="lazy" />
-                    <div class="photo-actions">
-                        <button class="btn btn-danger btn-sm" onclick="confirmDelete('${photo.id}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                    <div class="photo-info">
-                        <span class="photo-title">${photo.title}</span>
-                        <small>${photo.event || 'No event'}</small>
-                    </div>
-                </div>
-            `).join('');
         }
 
-        // ===== FILE UPLOAD =====
+        // ===== PHOTO UPLOAD =====
+        async function uploadPhotos(files, eventId, title) {
+            const progressBar = document.querySelector('#uploadProgress .progress-bar');
+            const progressContainer = document.getElementById('uploadProgress');
+            const statusText = document.getElementById('uploadStatus');
+            
+            progressContainer.style.display = 'block';
+            let uploaded = 0;
+            const total = files.length;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('eventId', eventId || '');
+                formData.append('title', title || file.name);
+                formData.append('description', `Uploaded on ${new Date().toLocaleDateString()}`);
+                formData.append('action', 'uploadPhoto');
+                
+                try {
+                    statusText.textContent = `Uploading ${file.name}... (${i + 1}/${total})`;
+                    
+                    const response = await fetch(CONFIG.API_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        uploaded++;
+                        progressBar.style.width = `${(uploaded / total) * 100}%`;
+                        console.log('Uploaded:', result);
+                    } else {
+                        console.error('Upload failed:', result.error);
+                        alert(`Failed to upload ${file.name}: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert(`Error uploading ${file.name}`);
+                }
+            }
+            
+            progressBar.style.width = '100%';
+            statusText.textContent = `Upload complete! ${uploaded} of ${total} photos uploaded.`;
+            
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+            }, 3000);
+            
+            // Reload photos
+            loadPhotos();
+            
+            // Reset file input
+            document.getElementById('fileInput').value = '';
+        }
+
+        // ===== FILE INPUT HANDLER =====
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = this.files;
+            if (files.length > 0) {
+                const eventId = document.getElementById('uploadEventSelect').value;
+                const title = document.getElementById('uploadPhotoTitle').value;
+                uploadPhotos(files, eventId, title);
+            }
+        });
+
+        // ===== CLICK TO UPLOAD =====
         document.getElementById('uploadArea').addEventListener('click', function() {
             document.getElementById('fileInput').click();
         });
 
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            const files = this.files;
-            if (files.length > 0) {
-                handleFiles(files);
-            }
-            this.value = '';
-        });
-
-        // Drag & Drop
+        // ===== DRAG & DROP =====
         const uploadArea = document.getElementById('uploadArea');
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
             this.classList.add('dragover');
         });
-        
+
         uploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
             this.classList.remove('dragover');
         });
-        
+
         uploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
             this.classList.remove('dragover');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                handleFiles(files);
+                const eventId = document.getElementById('uploadEventSelect').value;
+                const title = document.getElementById('uploadPhotoTitle').value;
+                uploadPhotos(files, eventId, title);
             }
         });
-
-        function handleFiles(files) {
-            let validFiles = 0;
-            for (let file of files) {
-                if (file.type.startsWith('image/') && file.size <= 10 * 1024 * 1024) {
-                    validFiles++;
-                    // In production, upload to Google Drive via Apps Script
-                    // For demo, create preview
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const newPhoto = {
-                            id: 'PH_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
-                            title: file.name,
-                            url: e.target.result,
-                            event: 'Pending'
-                        };
-                        photosData.push(newPhoto);
-                        loadPhotos();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-            if (validFiles > 0) {
-                alert(`Uploaded ${validFiles} photo(s) successfully!`);
-            } else {
-                alert('No valid images found. Please upload JPG, PNG, or WebP images under 10MB.');
-            }
-        }
 
         // ===== DELETE PHOTO =====
         function confirmDelete(id) {
@@ -349,12 +444,24 @@
             modal.show();
         }
 
-        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
             const id = document.getElementById('deletePhotoId').value;
-            photosData = photosData.filter(p => p.id !== id);
-            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
-            loadPhotos();
-            alert('Photo deleted successfully!');
+            
+            try {
+                const response = await fetch(`${CONFIG.API_URL}?action=deletePhoto&id=${id}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                    loadPhotos();
+                    alert('Photo deleted successfully!');
+                } else {
+                    alert('Failed to delete photo: ' + (result.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Error deleting photo');
+            }
         });
 
         // ===== INIT =====
@@ -365,7 +472,12 @@
             document.getElementById('adminUserName').textContent = username;
             document.getElementById('adminAvatar').textContent = username.charAt(0).toUpperCase();
             
+            loadEventsForUpload();
             loadPhotos();
+            
+            // Update badges
+            document.getElementById('eventBadge').textContent = '0';
+            document.getElementById('videoBadge').textContent = '0';
         });
     </script>
 
