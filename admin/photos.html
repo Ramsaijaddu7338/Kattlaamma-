@@ -401,83 +401,75 @@
             });
         }
 
-        // ===== PHOTO UPLOAD - BASE64 METHOD =====
-        async function uploadPhotos(files, eventId, title) {
-            const progressBar = document.querySelector('#uploadProgress .progress-bar');
-            const progressContainer = document.getElementById('uploadProgress');
-            const statusText = document.getElementById('uploadStatus');
+        // ===== PHOTO UPLOAD - USING PROXY =====
+async function uploadPhotos(files, eventId, title) {
+    const progressBar = document.querySelector('#uploadProgress .progress-bar');
+    const progressContainer = document.getElementById('uploadProgress');
+    const statusText = document.getElementById('uploadStatus');
+    
+    progressContainer.style.display = 'block';
+    let uploaded = 0;
+    const total = files.length;
+    
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        try {
+            statusText.textContent = `Processing ${file.name}... (${i + 1}/${total})`;
             
-            // Check API connection first
-            const isConnected = await checkAPI();
-            if (!isConnected) {
-                alert('❌ Cannot connect to API. Please check your API_URL configuration.');
-                return;
+            // Convert to Base64
+            const base64 = await fileToBase64(file);
+            
+            // Use FormData instead of JSON - this works better with Apps Script
+            const formData = new FormData();
+            formData.append('action', 'uploadPhotoBase64');
+            formData.append('eventId', eventId || '');
+            formData.append('title', title || file.name);
+            formData.append('description', `Uploaded on ${new Date().toLocaleDateString()}`);
+            formData.append('imageData', base64);
+            formData.append('fileName', file.name);
+            formData.append('fileType', file.type);
+            
+            console.log('📤 Sending upload request to:', CONFIG.API_URL);
+            
+            const response = await fetch(CONFIG.API_URL, {
+                method: 'POST',
+                // Don't set Content-Type header - browser will set it with boundary for FormData
+                body: formData
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
-            progressContainer.style.display = 'block';
-            let uploaded = 0;
-            const total = files.length;
+            const result = await response.json();
+            console.log('📥 Upload response:', result);
             
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                
-                try {
-                    statusText.textContent = `Processing ${file.name}... (${i + 1}/${total})`;
-                    
-                    const base64 = await fileToBase64(file);
-                    
-                    const payload = {
-                        action: 'uploadPhotoBase64',
-                        eventId: eventId || '',
-                        title: title || file.name,
-                        description: `Uploaded on ${new Date().toLocaleDateString()}`,
-                        imageData: base64,
-                        fileName: file.name,
-                        fileType: file.type
-                    };
-                    
-                    console.log('Sending upload request to:', CONFIG.API_URL);
-                    
-                    const response = await fetch(CONFIG.API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    
-                    const result = await response.json();
-                    console.log('Upload response:', result);
-                    
-                    if (result.success) {
-                        uploaded++;
-                        progressBar.style.width = `${(uploaded / total) * 100}%`;
-                        console.log('Uploaded successfully:', result);
-                    } else {
-                        console.error('Upload failed:', result.error);
-                        alert(`Failed to upload ${file.name}: ${result.error}`);
-                    }
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    alert(`Error uploading ${file.name}: ${error.message}`);
-                }
+            if (result.success) {
+                uploaded++;
+                progressBar.style.width = `${(uploaded / total) * 100}%`;
+                console.log('✅ Uploaded successfully:', result);
+            } else {
+                console.error('❌ Upload failed:', result.error);
+                alert(`Failed to upload ${file.name}: ${result.error}`);
             }
-            
-            progressBar.style.width = '100%';
-            statusText.textContent = `Upload complete! ${uploaded} of ${total} photos uploaded.`;
-            
-            setTimeout(() => {
-                progressContainer.style.display = 'none';
-                progressBar.style.width = '0%';
-            }, 3000);
-            
-            loadPhotos();
-            document.getElementById('fileInput').value = '';
+        } catch (error) {
+            console.error('❌ Upload error:', error);
+            alert(`Error uploading ${file.name}: ${error.message}`);
         }
+    }
+    
+    progressBar.style.width = '100%';
+    statusText.textContent = `Upload complete! ${uploaded} of ${total} photos uploaded.`;
+    
+    setTimeout(() => {
+        progressContainer.style.display = 'none';
+        progressBar.style.width = '0%';
+    }, 3000);
+    
+    loadPhotos();
+    document.getElementById('fileInput').value = '';
+}
 
         // ===== FILE INPUT HANDLER =====
         document.getElementById('fileInput').addEventListener('change', function(e) {
