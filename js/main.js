@@ -58,7 +58,7 @@ function createParticles() {
 
 // ===== CONFIG =====
 const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbyl_rwaPTR8IL6Xt4T7qbnaB6kFpnmqHiz9_JHCzTjerouhqHHQlyU17orIFu5oYmSk/exec',
     GOOGLE_DRIVE_FOLDER: '1YOUR_DRIVE_FOLDER_ID',
     TEMPLE_NAME: 'శ్రీ శ్రీ కట్లమ్మ అమ్మవారి ఆలయం',
     VILLAGE: 'చిన్నమలం',
