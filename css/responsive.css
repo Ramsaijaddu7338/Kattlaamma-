@@ -1,0 +1,303 @@
+/* ===== MOBILE FIRST ===== */
+
+/* Extra Small Devices (phones, 576px and down) */
+@media (max-width: 576px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .telugu-heading {
+        font-size: 1.5rem;
+    }
+    
+    .english-sub {
+        font-size: 0.9rem;
+    }
+    
+    .village-name {
+        font-size: 1rem;
+    }
+    
+    .hero-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        margin: 0 !important;
+    }
+    
+    .section-title {
+        font-size: 1.8rem !important;
+    }
+    
+    .feature-card {
+        padding: 1rem !important;
+    }
+    
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+    
+    .event-card .card-img-top {
+        height: 180px;
+    }
+    
+    .timeline {
+        padding-left: 15px;
+    }
+    
+    .timeline-item {
+        padding-left: 10px;
+    }
+    
+    .timeline-year {
+        font-size: 1.5rem;
+    }
+    
+    .timeline-content {
+        padding: 1rem;
+    }
+    
+    .gallery-item img {
+        height: 180px;
+    }
+    
+    .video-card img {
+        height: 180px;
+    }
+    
+    .footer {
+        text-align: center;
+    }
+    
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+/* Small Devices (tablets, 768px and down) */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .brand-telugu {
+        font-size: 1.1rem;
+    }
+    
+    .hero-section {
+        min-height: 80vh;
+    }
+    
+    .page-header {
+        padding: 5rem 0 2rem;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem !important;
+    }
+    
+    .about-image-wrap {
+        margin-top: 2rem;
+    }
+    
+    .event-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .event-filters select {
+        width: 100% !important;
+    }
+    
+    .gallery-filters {
+        flex-direction: column;
+    }
+    
+    .gallery-filters .col-md-3,
+    .gallery-filters .col-md-4 {
+        margin-bottom: 10px;
+    }
+    
+    .sidebar-card {
+        margin-top: 1.5rem;
+    }
+    
+    .modal-fullscreen .modal-dialog {
+        margin: 0;
+    }
+}
+
+/* Medium Devices (desktops, 992px and down) */
+@media (max-width: 992px) {
+    .hero-title {
+        font-size: 2.8rem;
+    }
+    
+    .telugu-heading {
+        font-size: 2.2rem;
+    }
+    
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    
+    .row.g-4 {
+        --bs-gutter-y: 1.5rem;
+    }
+    
+    .event-card .card-img-top {
+        height: 200px;
+    }
+}
+
+/* Large Devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .hero-title {
+        font-size: 4.5rem;
+    }
+    
+    .telugu-heading {
+        font-size: 3.5rem;
+    }
+    
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* ===== TABLET PORTRAIT ===== */
+@media (min-width: 768px) and (max-width: 992px) {
+    .hero-buttons .btn {
+        padding: 0.6rem 2rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem !important;
+    }
+    
+    .gallery-item img {
+        height: 240px;
+    }
+}
+
+/* ===== MOBILE NAV ===== */
+@media (max-width: 991px) {
+    .navbar {
+        background: rgba(42, 26, 14, 0.95) !important;
+        backdrop-filter: blur(10px);
+    }
+    
+    .navbar-nav {
+        padding: 1rem 0;
+    }
+    
+    .nav-link {
+        padding: 0.7rem 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    .navbar-toggler {
+        border-color: var(--gold);
+    }
+    
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23c9a04e' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+}
+
+/* ===== TOUCH DEVICES ===== */
+@media (hover: none) {
+    .feature-card:hover {
+        transform: none !important;
+    }
+    
+    .event-card:hover {
+        transform: none !important;
+    }
+    
+    .gallery-item:hover img {
+        transform: none !important;
+    }
+    
+    .gallery-item .overlay {
+        transform: translateY(0) !important;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+    
+    .video-card:hover .play-btn {
+        transform: translate(-50%, -50%) scale(1) !important;
+    }
+}
+
+/* ===== SMALL SCREEN LIGHTBOX ===== */
+@media (max-width: 576px) {
+    #lightboxImage {
+        max-height: 60vh !important;
+    }
+    
+    .lightbox-nav {
+        margin-top: 1rem;
+    }
+    
+    #videoPlayer {
+        height: 250px !important;
+    }
+}
+
+/* ===== ADMIN PANEL RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        display: none;
+    }
+    
+    .admin-content {
+        padding: 1rem;
+    }
+    
+    .admin-stats .card {
+        margin-bottom: 1rem;
+    }
+    
+    .admin-table {
+        font-size: 0.9rem;
+    }
+    
+    .admin-table td,
+    .admin-table th {
+        padding: 0.5rem;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    .navbar,
+    .footer,
+    .scroll-indicator,
+    .floating-petals,
+    .diya-glow,
+    .golden-particles {
+        display: none !important;
+    }
+    
+    .hero-section {
+        min-height: 50vh !important;
+    }
+    
+    .hero-overlay {
+        background: rgba(0,0,0,0.5) !important;
+    }
+    
+    .page-header {
+        background: var(--primary-dark) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

@@ -1,0 +1,535 @@
+/* ===== ROOT VARIABLES ===== */
+:root {
+    --primary-maroon: #7a1a2e;
+    --primary-dark: #4a0e1a;
+    --gold: #c9a04e;
+    --gold-light: #e8d5a3;
+    --gold-dark: #a8853a;
+    --cream: #f9f1e7;
+    --brown-dark: #3d2415;
+    --brown-light: #8b6b4a;
+    --text-dark: #2a1a0e;
+    --text-light: #f5ede5;
+    --shadow-gold: 0 0 30px rgba(201, 160, 78, 0.3);
+}
+
+/* ===== RESET & BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--cream);
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Noto Serif Telugu', 'Inter', sans-serif;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+    transition: all 0.4s ease;
+    padding: 1rem 0;
+    background: transparent;
+}
+
+.navbar.scrolled {
+    background: rgba(74, 14, 26, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    padding: 0.5rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.brand-telugu {
+    font-family: 'Noto Serif Telugu', serif;
+    color: var(--gold);
+}
+
+.brand-english {
+    color: var(--gold-light);
+    font-size: 0.8rem;
+    display: block;
+    font-weight: 300;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.8) !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--gold) !important;
+    text-shadow: 0 0 20px rgba(201, 160, 78, 0.3);
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('../assets/images/temple-hero.jpg') center/cover no-repeat;
+    animation: heroZoom 20s ease-in-out infinite alternate;
+}
+
+@keyframes heroZoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+        rgba(42, 26, 14, 0.85) 0%,
+        rgba(74, 14, 26, 0.7) 50%,
+        rgba(42, 26, 14, 0.85) 100%);
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    text-shadow: 0 0 60px rgba(201, 160, 78, 0.3);
+}
+
+.telugu-heading {
+    font-family: 'Noto Serif Telugu', serif;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.english-sub {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+}
+
+.village-name {
+    font-family: 'Noto Serif Telugu', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+}
+
+.hero-tagline {
+    font-size: 1.2rem;
+    color: var(--gold-light);
+    font-weight: 300;
+}
+
+/* ===== BUTTONS ===== */
+.btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #fff;
+    border: none;
+    padding: 0.8rem 2.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(201, 160, 78, 0.4);
+    color: #fff;
+}
+
+.btn-outline-gold {
+    background: transparent;
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    padding: 0.8rem 2.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+    background: var(--gold);
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(201, 160, 78, 0.3);
+}
+
+/* ===== SECTION BADGE ===== */
+.section-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #fff;
+    padding: 0.4rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+.section-title {
+    font-family: 'Noto Serif Telugu', serif;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+}
+
+/* ===== FEATURE CARDS ===== */
+.feature-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+    border: 1px solid rgba(201, 160, 78, 0.1);
+    cursor: pointer;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(201, 160, 78, 0.15);
+    border-color: var(--gold);
+}
+
+.feature-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+}
+
+/* ===== EVENT CARDS ===== */
+.event-card {
+    background: #fff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.4s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+.event-card .card-img-top {
+    height: 220px;
+    object-fit: cover;
+}
+
+.event-card .card-body {
+    padding: 1.5rem;
+}
+
+.event-date {
+    color: var(--gold-dark);
+    font-weight: 600;
+}
+
+.event-meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--brown-light);
+    font-size: 0.9rem;
+}
+
+.event-meta i {
+    margin-right: 0.3rem;
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--gold), var(--gold-dark));
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding-left: 20px;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 15px;
+    height: 15px;
+    background: var(--gold);
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 20px rgba(201, 160, 78, 0.4);
+}
+
+.timeline-year {
+    font-family: 'Noto Serif Telugu', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold-dark);
+}
+
+.timeline-content {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    background: linear-gradient(135deg, var(--primary-dark), #1a0a06);
+    color: var(--text-light);
+}
+
+.footer-brand {
+    font-family: 'Noto Serif Telugu', serif;
+    color: var(--gold);
+}
+
+.footer a {
+    color: var(--gold-light);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--gold);
+}
+
+.footer-divider {
+    border-color: rgba(201, 160, 78, 0.2);
+}
+
+.social-icons a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: rgba(201, 160, 78, 0.1);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    margin-right: 8px;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background: var(--gold);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+/* ===== UTILITY ===== */
+.text-gold {
+    color: var(--gold);
+}
+
+.bg-gold {
+    background: var(--gold);
+    color: #fff;
+}
+
+.bg-gold-light {
+    background: var(--gold-light);
+}
+
+/* ===== SCROLL INDICATOR ===== */
+.scroll-indicator {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    animation: bounce 2s infinite;
+    text-align: center;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+}
+
+/* ===== PAGE HEADER ===== */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-maroon));
+    color: #fff;
+    padding: 6rem 0 3rem;
+}
+
+.page-header .breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.page-header .breadcrumb-item a {
+    color: var(--gold-light);
+    text-decoration: none;
+}
+
+.page-header .breadcrumb-item.active {
+    color: var(--gold);
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    border-left: 4px solid var(--gold);
+}
+
+/* ===== GALLERY ===== */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+}
+
+.gallery-item .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    color: #fff;
+    transform: translateY(100%);
+    transition: transform 0.4s ease;
+}
+
+.gallery-item:hover .overlay {
+    transform: translateY(0);
+}
+
+/* ===== VIDEO CARDS ===== */
+.video-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.video-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.video-card .play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(201, 160, 78, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.video-card:hover .play-btn {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: var(--gold);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .telugu-heading {
+        font-size: 1.8rem;
+    }
+    
+    .english-sub {
+        font-size: 1rem;
+    }
+    
+    .village-name {
+        font-size: 1.2rem;
+    }
+    
+    .hero-tagline {
+        font-size: 1rem;
+    }
+    
+    .btn-gold, .btn-outline-gold {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .timeline {
+        padding-left: 20px;
+    }
+    
+    .timeline-item::before {
+        left: -20px;
+        width: 12px;
+        height: 12px;
+    }
+    
+    .gallery-item img {
+        height: 200px;
+    }
+}

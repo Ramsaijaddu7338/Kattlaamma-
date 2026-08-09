@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Admin Panel</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@400;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* ===== ADMIN GLOBAL STYLES ===== */
+        :root {
+            --primary-maroon: #7a1a2e;
+            --primary-dark: #4a0e1a;
+            --gold: #c9a04e;
+            --gold-light: #e8d5a3;
+            --sidebar-width: 260px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f0eb;
+            min-height: 100vh;
+        }
+        
+        /* ===== ADMIN SIDEBAR ===== */
+        .admin-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-dark), #1a0a06);
+            color: #fff;
+            padding: 1.5rem 0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        
+        .admin-sidebar-brand {
+            text-align: center;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(201, 160, 78, 0.15);
+        }
+        
+        .admin-sidebar-brand .brand-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-sidebar-brand h5 {
+            font-family: 'Noto Serif Telugu', serif;
+            color: var(--gold);
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+        
+        .admin-sidebar-brand small {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+        
+        .admin-sidebar-menu {
+            padding: 1.5rem 0;
+        }
+        
+        .admin-sidebar-menu .menu-label {
+            padding: 0 1.5rem;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 0.5rem;
+        }
+        
+        .admin-sidebar-menu .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+        
+        .admin-sidebar-menu .menu-item:hover {
+            background: rgba(201, 160, 78, 0.08);
+            color: var(--gold);
+            border-left-color: var(--gold);
+        }
+        
+        .admin-sidebar-menu .menu-item.active {
+            background: rgba(201, 160, 78, 0.12);
+            color: var(--gold);
+            border-left-color: var(--gold);
+        }
+        
+        .admin-sidebar-menu .menu-item i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .admin-sidebar-menu .menu-item .badge {
+            margin-left: auto;
+            background: var(--gold);
+            color: #fff;
+        }
+        
+        .admin-sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .admin-sidebar-footer .menu-item {
+            padding: 0.5rem 1.5rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+        }
+        
+        .admin-sidebar-footer .menu-item:hover {
+            color: #ff6b6b;
+        }
+        
+        .admin-sidebar-footer .menu-item i {
+            margin-right: 12px;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .admin-main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        
+        .admin-header h4 {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .admin-header .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .admin-header .admin-user .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .admin-header .admin-user .user-info {
+            text-align: right;
+        }
+        
+        .admin-header .admin-user .user-info small {
+            display: block;
+            color: #6c757d;
+            font-size: 0.75rem;
+        }
+        
+        /* ===== STATS CARDS ===== */
+        .stat-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .stat-card .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card .stat-icon.gold {
+            background: rgba(201, 160, 78, 0.12);
+            color: var(--gold);
+        }
+        
+        .stat-card .stat-icon.maroon {
+            background: rgba(122, 26, 46, 0.1);
+            color: var(--primary-maroon);
+        }
+        
+        .stat-card .stat-icon.green {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+        
+        .stat-card .stat-icon.blue {
+            background: rgba(13, 110, 253, 0.1);
+            color: #0d6efd;
+        }
+        
+        .stat-card .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+        
+        .stat-card .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .stat-card .stat-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-card .stat-change.positive {
+            color: #28a745;
+        }
+        
+        .stat-card .stat-change.negative {
+            color: #dc3545;
+        }
+        
+        /* ===== RECENT ACTIVITY ===== */
+        .activity-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            margin-top: 2rem;
+        }
+        
+        .activity-card .card-title {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-item .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .activity-item .activity-icon.gold-bg {
+            background: rgba(201, 160, 78, 0.12);
+            color: var(--gold);
+        }
+        
+        .activity-item .activity-icon.green-bg {
+            background: rgba(40, 167, 69, 0.12);
+            color: #28a745;
+        }
+        
+        .activity-item .activity-icon.blue-bg {
+            background: rgba(13, 110, 253, 0.12);
+            color: #0d6efd;
+        }
+        
+        .activity-item .activity-content {
+            flex: 1;
+        }
+        
+        .activity-item .activity-content .activity-text {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        
+        .activity-item .activity-content .activity-time {
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+        
+        /* ===== MOBILE TOGGLE ===== */
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            padding: 0.5rem;
+        }
+        
+        .mobile-toggle:focus {
+            outline: none;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .admin-main {
+                padding: 1rem;
+            }
+            
+            .stat-card .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .admin-header h4 {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* ===== OVERLAY ===== */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== SIDEBAR OVERLAY ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== ADMIN SIDEBAR ===== -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-sidebar-brand">
+            <span class="brand-icon"><i class="bi bi-building"></i></span>
+            <h5>శ్రీ శ్రీ కట్లమ్మ</h5>
+            <small>అమ్మవారి ఆలయం · Admin</small>
+        </div>
+        
+        <nav class="admin-sidebar-menu">
+            <div class="menu-label">Main</div>
+            <a href="dashboard.html" class="menu-item active">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+            <a href="events.html" class="menu-item">
+                <i class="bi bi-calendar-event"></i> Events
+                <span class="badge" id="eventBadge">0</span>
+            </a>
+            <a href="photos.html" class="menu-item">
+                <i class="bi bi-images"></i> Photos
+                <span class="badge" id="photoBadge">0</span>
+            </a>
+            <a href="videos.html" class="menu-item">
+                <i class="bi bi-film"></i> Videos
+                <span class="badge" id="videoBadge">0</span>
+            </a>
+        </nav>
+        
+        <div class="admin-sidebar-footer">
+            <a href="#" class="menu-item" onclick="handleLogout()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+            <a href="../index.html" class="menu-item" target="_blank">
+                <i class="bi bi-eye"></i> View Website
+            </a>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="admin-main">
+        <!-- Header -->
+        <header class="admin-header">
+            <div>
+                <button class="mobile-toggle" id="mobileToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h4>Dashboard</h4>
+            </div>
+            <div class="admin-user">
+                <div class="user-info d-none d-sm-block">
+                    <strong id="adminUserName">Admin</strong>
+                    <small>Administrator</small>
+                </div>
+                <div class="avatar" id="adminAvatar">A</div>
+            </div>
+        </header>
+
+        <!-- Stats -->
+        <div class="row g-4">
+            <div class="col-sm-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="stat-icon gold">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div class="stat-number" id="totalEvents">0</div>
+                    <div class="stat-label">Total Events</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="stat-icon maroon">
+                        <i class="bi bi-images"></i>
+                    </div>
+                    <div class="stat-number" id="totalPhotos">0</div>
+                    <div class="stat-label">Total Photos</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="bi bi-film"></i>
+                    </div>
+                    <div class="stat-number" id="totalVideos">0</div>
+                    <div class="stat-label">Total Videos</div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div class="stat-number" id="latestEvent">-</div>
+                    <div class="stat-label">Latest Event</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <h5 class="card-title">
+                <i class="bi bi-clock-history me-2"></i> Recent Activity
+            </h5>
+            <div id="recentActivity">
+                <div class="activity-item">
+                    <div class="activity-icon gold-bg">
+                        <i class="bi bi-calendar-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-text">Welcome to the admin dashboard</p>
+                        <span class="activity-time">Just now</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ===== ADMIN AUTH CHECK =====
+        function checkAuth() {
+            if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // ===== LOGOUT =====
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminUser');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // ===== LOAD DASHBOARD STATS =====
+        async function loadDashboardStats() {
+            try {
+                // Get username
+                const username = sessionStorage.getItem('adminUser') || 'Admin';
+                document.getElementById('adminUserName').textContent = username;
+                document.getElementById('adminAvatar').textContent = username.charAt(0).toUpperCase();
+                
+                // In production, fetch from Google Apps Script
+                // For demo, using mock data
+                const stats = {
+                    totalEvents: 12,
+                    totalPhotos: 245,
+                    totalVideos: 38,
+                    latestEvent: 'Ashada Kavadi 2026'
+                };
+                
+                document.getElementById('totalEvents').textContent = stats.totalEvents;
+                document.getElementById('totalPhotos').textContent = stats.totalPhotos;
+                document.getElementById('totalVideos').textContent = stats.totalVideos;
+                document.getElementById('latestEvent').textContent = stats.latestEvent;
+                
+                // Update badges
+                document.getElementById('eventBadge').textContent = stats.totalEvents;
+                document.getElementById('photoBadge').textContent = stats.totalPhotos;
+                document.getElementById('videoBadge').textContent = stats.totalVideos;
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // ===== MOBILE SIDEBAR TOGGLE =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('adminSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggleBtn = document.getElementById('mobileToggle');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', function() {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('show');
+                });
+            }
+            
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('show');
+                });
+            }
+            
+            // Check auth
+            if (!checkAuth()) return;
+            
+            // Load stats
+            loadDashboardStats();
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadDashboardStats, 30000);
+    </script>
+
+</body>
+</html>
