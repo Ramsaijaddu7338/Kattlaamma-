@@ -6,7 +6,6 @@ const itemsPerPage = 12;
 document.addEventListener('DOMContentLoaded', function() {
     loadGallery();
     
-    // Filters
     const yearFilter = document.getElementById('galleryYearFilter');
     const eventFilter = document.getElementById('galleryEventFilter');
     const searchInput = document.getElementById('gallerySearch');
@@ -48,7 +47,6 @@ async function loadGallery() {
         galleryData = data.photos;
         renderGallery(galleryData);
         
-        // Show/hide load more button
         const loadMoreBtn = document.getElementById('loadMoreGallery');
         if (loadMoreBtn) {
             loadMoreBtn.style.display = data.hasMore ? 'inline-block' : 'none';
@@ -70,20 +68,40 @@ function renderGallery(photos) {
     const container = document.getElementById('galleryContainer');
     if (!container) return;
     
-    container.innerHTML = photos.map(photo => `
-        <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="fade-up">
-            <div onclick="openLightbox('${photo.id}')">
-                <img src="${photo.thumbnail || photo.url}" 
-                     alt="${photo.title || 'Temple photo'}" 
-                     loading="lazy"
-                     class="img-fluid rounded-3" />
-                <div class="overlay">
-                    <h6 class="mb-0">${truncateText(photo.title || 'Untitled', 30)}</h6>
-                    <small>${photo.event || ''}</small>
+    if (!photos || photos.length === 0) {
+        container.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-image display-1 text-muted"></i>
+                <h4 class="mt-3">No photos found</h4>
+                <p class="text-muted">Upload photos from the admin panel.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = photos.map(photo => {
+        let imgUrl = photo.url || photo.direct_url || '';
+        if (photo.drive_file_id) {
+            imgUrl = `https://drive.google.com/uc?export=view&id=${photo.drive_file_id}`;
+        }
+        if (!imgUrl) imgUrl = 'assets/images/placeholder.jpg';
+        
+        return `
+            <div class="col-6 col-md-4 col-lg-3 gallery-item" data-aos="fade-up">
+                <div onclick="openLightbox('${photo.id}')">
+                    <img src="${imgUrl}" 
+                         alt="${photo.title || 'Temple photo'}" 
+                         loading="lazy"
+                         class="img-fluid rounded-3" 
+                         onerror="this.src='assets/images/placeholder.jpg'" />
+                    <div class="overlay">
+                        <h6 class="mb-0">${truncateText(photo.title || 'Untitled', 30)}</h6>
+                        <small>${photo.event || ''}</small>
+                    </div>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
     
     if (typeof AOS !== 'undefined') {
         AOS.refresh();
@@ -127,11 +145,9 @@ let lightboxImages = [];
 let currentImageIndex = 0;
 
 function openLightbox(photoId) {
-    // Find the photo in gallery data
     const photo = galleryData.find(p => p.id === photoId);
     if (!photo) return;
     
-    // Get all images from filtered view
     const container = document.getElementById('galleryContainer');
     const items = container.querySelectorAll('.gallery-item');
     lightboxImages = [];
@@ -140,7 +156,7 @@ function openLightbox(photoId) {
         const img = item.querySelector('img');
         if (img) {
             lightboxImages.push({
-                src: img.src.replace('/thumbnail/', '/'),
+                src: img.src,
                 title: img.alt || 'Temple photo'
             });
         }
@@ -167,7 +183,6 @@ function updateLightbox() {
     }
 }
 
-// Lightbox navigation
 document.addEventListener('DOMContentLoaded', function() {
     const prevBtn = document.getElementById('prevImage');
     const nextBtn = document.getElementById('nextImage');
@@ -190,9 +205,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Keyboard navigation
     document.addEventListener('keydown', function(e) {
-        if (document.getElementById('lightboxModal').classList.contains('show')) {
+        if (document.getElementById('lightboxModal')?.classList?.contains('show')) {
             if (e.key === 'ArrowLeft') {
                 document.getElementById('prevImage')?.click();
             } else if (e.key === 'ArrowRight') {
