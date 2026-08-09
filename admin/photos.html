@@ -44,7 +44,6 @@
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 999; }
         .sidebar-overlay.show { display: block; }
         
-        /* Upload Area */
         .upload-area {
             border: 2px dashed rgba(201, 160, 78, 0.3);
             border-radius: 16px;
@@ -58,7 +57,6 @@
         .upload-area.dragover { border-color: var(--gold); background: rgba(201, 160, 78, 0.08); }
         .upload-area .upload-icon { font-size: 3rem; color: var(--gold); display: block; margin-bottom: 1rem; }
         
-        /* Photo Grid */
         .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
         .photo-item { position: relative; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
         .photo-item img { width: 100%; height: 200px; object-fit: cover; }
@@ -215,9 +213,9 @@
     </div>
 
     <script>
-        // ===== CONFIG =====
+        // ===== CONFIG - UPDATE THIS URL =====
         const CONFIG = {
-            API_URL: 'https://script.google.com/macros/s/AKfycbwBw1zaTJrgChIqCx1l1ECdeVp7x0bjS7zqXZCdCtTa7DwnqiPa1B2sjS3jls5g3mYQ/exec' // ← REPLACE WITH YOUR DEPLOYMENT URL
+            API_URL: 'https://script.google.com/macros/s/AKfycbxPROLdNZwuQDDW7zVw6-_eWGG5vZB-BRgtUQh0e0ULHIFRZlnpJt_Rr4lpgHqB1e4/exec' // ← REPLACE WITH YOUR DEPLOYMENT URL
         };
 
         // ===== SIDEBAR LOGIC =====
@@ -341,7 +339,17 @@
             }
         }
 
-        // ===== PHOTO UPLOAD =====
+        // ===== FILE TO BASE64 HELPER =====
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // ===== PHOTO UPLOAD - BASE64 METHOD (MOST RELIABLE) =====
         async function uploadPhotos(files, eventId, title) {
             const progressBar = document.querySelector('#uploadProgress .progress-bar');
             const progressContainer = document.getElementById('uploadProgress');
@@ -353,34 +361,46 @@
             
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                const formData = new FormData();
-                formData.append('image', file);
-                formData.append('eventId', eventId || '');
-                formData.append('title', title || file.name);
-                formData.append('description', `Uploaded on ${new Date().toLocaleDateString()}`);
-                formData.append('action', 'uploadPhoto');
                 
                 try {
-                    statusText.textContent = `Uploading ${file.name}... (${i + 1}/${total})`;
+                    statusText.textContent = `Processing ${file.name}... (${i + 1}/${total})`;
+                    
+                    // Convert to Base64
+                    const base64 = await fileToBase64(file);
+                    
+                    // Send as JSON
+                    const payload = {
+                        action: 'uploadPhotoBase64',
+                        eventId: eventId || '',
+                        title: title || file.name,
+                        description: `Uploaded on ${new Date().toLocaleDateString()}`,
+                        imageData: base64,
+                        fileName: file.name,
+                        fileType: file.type
+                    };
                     
                     const response = await fetch(CONFIG.API_URL, {
                         method: 'POST',
-                        body: formData
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
                     });
                     
                     const result = await response.json();
+                    console.log('Upload response:', result);
                     
                     if (result.success) {
                         uploaded++;
                         progressBar.style.width = `${(uploaded / total) * 100}%`;
-                        console.log('Uploaded:', result);
+                        console.log('Uploaded successfully:', result);
                     } else {
                         console.error('Upload failed:', result.error);
                         alert(`Failed to upload ${file.name}: ${result.error}`);
                     }
                 } catch (error) {
                     console.error('Upload error:', error);
-                    alert(`Error uploading ${file.name}`);
+                    alert(`Error uploading ${file.name}: ${error.message}`);
                 }
             }
             
@@ -392,10 +412,7 @@
                 progressBar.style.width = '0%';
             }, 3000);
             
-            // Reload photos
             loadPhotos();
-            
-            // Reset file input
             document.getElementById('fileInput').value = '';
         }
 
@@ -416,20 +433,33 @@
 
         // ===== DRAG & DROP =====
         const uploadArea = document.getElementById('uploadArea');
+
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            this.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragenter', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             this.classList.add('dragover');
         });
 
         uploadArea.addEventListener('dragleave', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             this.classList.remove('dragover');
         });
 
         uploadArea.addEventListener('drop', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             this.classList.remove('dragover');
+            
             const files = e.dataTransfer.files;
+            console.log('Dropped files:', files);
+            
             if (files.length > 0) {
                 const eventId = document.getElementById('uploadEventSelect').value;
                 const title = document.getElementById('uploadPhotoTitle').value;
@@ -475,7 +505,6 @@
             loadEventsForUpload();
             loadPhotos();
             
-            // Update badges
             document.getElementById('eventBadge').textContent = '0';
             document.getElementById('videoBadge').textContent = '0';
         });
