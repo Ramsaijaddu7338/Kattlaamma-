@@ -1,3 +1,25 @@
+// ===== CONFIGURATION =====
+const CONFIG = {
+    API_URL: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec', // ← REPLACE WITH YOUR DEPLOYMENT URL
+    GOOGLE_DRIVE_FOLDER: '1WUeWMSHjLL5hadKdplou3OfyH95UB9aj',
+    SPREADSHEET_ID: '1pawm12qQ6KA43CUnrgMbHtJlRgcEHOQ8_-kzk_iLiwM',
+    TEMPLE_NAME: 'శ్రీ శ్రీ కట్లమ్మ అమ్మవారి ఆలయం',
+    VILLAGE: 'చిన్నమలం',
+    DISTRICT: 'పశ్చిమ గోదావరి',
+    STATE: 'ఆంధ్రప్రదేశ్'
+};
+
+// ===== IMAGE HELPERS =====
+function getImageUrl(fileId) {
+    if (!fileId) return 'assets/images/placeholder.jpg';
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+}
+
+function getThumbnailUrl(fileId) {
+    if (!fileId) return 'assets/images/placeholder.jpg';
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w400`;
+}
+
 // ===== AOS INIT =====
 document.addEventListener('DOMContentLoaded', function() {
     AOS.init({
@@ -12,10 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // ===== NAVBAR SCROLL EFFECT =====
 window.addEventListener('scroll', function() {
     const navbar = document.getElementById('mainNav');
-    if (window.scrollY > 100) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+    if (navbar) {
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
     }
 });
 
@@ -56,34 +80,35 @@ function createParticles() {
     }
 }
 
-// ===== CONFIG =====
-const CONFIG = {
-    API_URL: 'https://script.google.com/macros/s/AKfycbyl_rwaPTR8IL6Xt4T7qbnaB6kFpnmqHiz9_JHCzTjerouhqHHQlyU17orIFu5oYmSk/exec',
-    GOOGLE_DRIVE_FOLDER: '1YOUR_DRIVE_FOLDER_ID',
-    TEMPLE_NAME: 'శ్రీ శ్రీ కట్లమ్మ అమ్మవారి ఆలయం',
-    VILLAGE: 'చిన్నమలం',
-    DISTRICT: 'పశ్చిమ గోదావరి',
-    STATE: 'ఆంధ్రప్రదేశ్'
-};
-
 // ===== UTILITY FUNCTIONS =====
 function formatDate(dateString) {
+    if (!dateString) return '-';
     const options = { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric',
         weekday: 'long'
     };
-    return new Date(dateString).toLocaleDateString('te-IN', options);
+    try {
+        return new Date(dateString).toLocaleDateString('te-IN', options);
+    } catch {
+        return dateString;
+    }
 }
 
 function truncateText(text, length = 100) {
+    if (!text) return '';
     if (text.length <= length) return text;
     return text.substring(0, length) + '...';
 }
 
 function getYearFromDate(dateString) {
-    return new Date(dateString).getFullYear();
+    if (!dateString) return new Date().getFullYear();
+    try {
+        return new Date(dateString).getFullYear();
+    } catch {
+        return new Date().getFullYear();
+    }
 }
 
 // ===== LOADING SPINNER =====
@@ -127,6 +152,20 @@ async function fetchAPI(endpoint, params = {}) {
     }
 }
 
+async function postAPI(data) {
+    try {
+        const response = await fetch(CONFIG.API_URL, {
+            method: 'POST',
+            body: data
+        });
+        if (!response.ok) throw new Error('API request failed');
+        return await response.json();
+    } catch (error) {
+        console.error('API Error:', error);
+        return null;
+    }
+}
+
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', function() {
     createPetals();
@@ -135,22 +174,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close mobile menu on link click
     const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
     const navCollapse = document.getElementById('navMenu');
-    const bsCollapse = new bootstrap.Collapse(navCollapse, { toggle: false });
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth < 992) {
-                bsCollapse.hide();
-            }
+    if (navCollapse) {
+        const bsCollapse = new bootstrap.Collapse(navCollapse, { toggle: false });
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    bsCollapse.hide();
+                }
+            });
         });
-    });
+    }
 });
 
 // ===== EXPOSE FOR OTHER SCRIPTS =====
 window.CONFIG = CONFIG;
 window.fetchAPI = fetchAPI;
+window.postAPI = postAPI;
 window.formatDate = formatDate;
 window.truncateText = truncateText;
 window.getYearFromDate = getYearFromDate;
 window.showLoading = showLoading;
 window.hideLoading = hideLoading;
+window.getImageUrl = getImageUrl;
+window.getThumbnailUrl = getThumbnailUrl;
